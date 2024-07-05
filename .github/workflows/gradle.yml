@@ -8,10 +8,8 @@
 name: Java CI with Gradle
 
 on:
-  push:
-    branches: [ "main", "deploy", "develop" ]
   pull_request:
-    branches: [ "main", "deploy", "develop" ]
+    branches: "develop"
 
 jobs:
   build:
@@ -42,9 +40,9 @@ jobs:
         path: |  
           ~/.gradle/caches
           ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
