@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.chzz.market.domain.oauth.dto.KakaoUserInfoResponse;
+import org.chzz.market.domain.user.entity.User;
+import org.chzz.market.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +29,11 @@ public class KakaoOAuth2UserService {
     String clientSecret;
     @Value("${spring.security.oauth2.client.registration.kakao.authorization-grant-type}")
     String authorizationGrantType;
+
+    private final UserRepository userRepository;
+    public KakaoOAuth2UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // KAKAO 액세스 토큰 가져오기
     public String getAccessToken(String code) throws JsonProcessingException {
@@ -92,6 +99,38 @@ public class KakaoOAuth2UserService {
         Map<String, Object> attributes = objectMapper.convertValue(jsonNode.get("kakao_account"), Map.class);
 
         return new KakaoUserInfoResponse(attributes, properties, jsonNode.get("id").asText());
+    }
+
+    // KAKAO 회원가입
+    public User join(KakaoUserInfoResponse kakaoUserInfoResponse) {
+
+        // 회원 정보
+        String providerId = kakaoUserInfoResponse.getProviderId();
+        String email = kakaoUserInfoResponse.getEmail();
+        String nickname = kakaoUserInfoResponse.getNickname();
+        User.ProviderType providerType = kakaoUserInfoResponse.getProviderType();
+        User.UserRole userRole = User.UserRole.USER; // 일단 모든 로그인 계정을 USER로 설정
+
+        // 회원 여부 확인 (이메일 기준)
+        Boolean isExist = userRepository.existsByEmail(email);
+        User user;
+        if(!isExist) {
+            // 회원가입
+            user = User.builder()
+                    .providerId(providerId)
+                    .email(email)
+                    .nickname(nickname)
+                    .providerType(providerType)
+                    .userRole(userRole)
+                    .build();
+
+            userRepository.save(user);
+        } else {
+            // 회원 정보 가져오기
+            user = userRepository.findByEmail(kakaoUserInfoResponse.getEmail());
+        }
+
+        return user;
     }
 
 }
