@@ -77,7 +77,7 @@ public class NaverOAuth2UserService{
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        // 2. HTTP 요청 보내기
+        // 2. HTTP 요청 전송
         HttpEntity<MultiValueMap<String, String>> naverUserInfoRequest = new HttpEntity<>(headers);
         RestTemplate rt = new RestTemplate();
         ResponseEntity<String> response = rt.exchange(
@@ -87,7 +87,7 @@ public class NaverOAuth2UserService{
                 String.class
         );
 
-        // 3. responseBody에 있는 정보 꺼내기
+        // 3. responseBody에 있는 정보 추출
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);

@@ -40,7 +40,6 @@ public class NaverOAuth2Controller {
     // 네이버 로그인/회원가입
     @GetMapping("/code")
     public ResponseEntity<?> login(@RequestParam("code") String code) throws JsonProcessingException {
-
         // 1. 액세스 토큰 발급
         String accessToken = naverOAuth2UserService.getAccessToken(code);
 

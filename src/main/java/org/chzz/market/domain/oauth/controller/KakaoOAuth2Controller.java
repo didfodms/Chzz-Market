@@ -42,7 +42,6 @@ public class KakaoOAuth2Controller {
     // 카카오 로그인 + 회원가입
     @GetMapping("/code")
     public ResponseEntity<?> login(@RequestParam("code") String code) throws JsonProcessingException {
-
         // 1. 액세스 토큰 발급
         String accessToken = kakaoOAuth2UserService.getAccessToken(code);
 
