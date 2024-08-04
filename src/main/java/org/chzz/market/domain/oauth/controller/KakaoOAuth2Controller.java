@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.chzz.market.domain.oauth.dto.KakaoUserInfoResponse;
 import org.chzz.market.domain.oauth.service.KakaoOAuth2UserService;
+import org.chzz.market.domain.user.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -48,6 +49,9 @@ public class KakaoOAuth2Controller {
         // 2. 회원정보 조회
         KakaoUserInfoResponse kakaoUserInfoResponse = kakaoOAuth2UserService.getKakaoUserInfo(accessToken);
 
-        return null;
+        // 3. 회원가입
+        User user = kakaoOAuth2UserService.join(kakaoUserInfoResponse);
+
+        return ResponseEntity.ok(user);
     }
 }
