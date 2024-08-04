@@ -26,7 +26,7 @@ public class NaverUserInfoResponse {
     }
 
     public String getNickname() {
-        return String.valueOf(attributes.get("name"));
+        return String.valueOf(attributes.get("nickname"));
     }
 
 }
